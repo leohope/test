@@ -1,7 +1,7 @@
 # This my first testing READ.ME for museum's app
 ## To do list:
-  1. Mindmaping
+  1. Mindmapping
   1. Sketching
-  1. Wareframe
+  1. Wireframe
   1. Design
   1. Review

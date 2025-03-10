@@ -1,0 +1,16 @@
+name: API Tests with PyTest
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install Poetry
+        run: pip install poetry
+      - name: Install dependencies
+        run: poetry install --no-interaction --no-root
+      - name: Run tests
+        run: poetry run pytest

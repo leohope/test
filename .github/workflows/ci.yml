@@ -17,7 +17,7 @@ jobs:
           CHROME_VERSION=$(google-chrome --version | awk '{print $3}')
           wget "https://storage.googleapis.com/chrome-for-testing-public/$CHROME_VERSION/linux64/chromedriver-linux64.zip"
           unzip chromedriver-linux64.zip
-          chmod +x chromedriver-linux64/chromedriver
-          mv chromedriver-linux64/chromedriver /usr/bin/chromedriver
+          sudo chmod +x chromedriver-linux64/chromedriver
+          sudo mv chromedriver-linux64/chromedriver /usr/bin/chromedriver
       - name: Run tests
         run: poetry run pytest

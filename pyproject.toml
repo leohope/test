@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "project-selenium"
+name = "project-test"
 version = "0.1.0"
 description = ""
 authors = ["Mick <garon312@gmail.com>"]

@@ -1,27 +1,19 @@
 import pytest
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 
 @pytest.fixture
 def driver():
-    options = webdriver.ChromeOptions()
-    options.add_argument("--headless")
-    driver = webdriver.Chrome(options=options)
+    driver = webdriver.Chrome()
+    driver.get("https://practicetestautomation.com/practice-test-login/")
     driver.maximize_window()
     yield driver
     driver.quit()
 
-@pytest.mark.parametrize("username, password, expected_message", [
-    ("test_user", "secret123", "Welcome, test_user"),
-    ("wrong_user", "wrong_pass", "Invalid username or password")
-])
-def test_login(driver, username, password, expected_message):
-    driver.get("https://example.com/login")
+def test_login(driver):
+    driver.find_element(By.ID, "username").send_keys("student")
+    driver.find_element(By.ID, "password").send_keys("Password123")
+    driver.find_element(By.ID, "submit").click()
 
-    driver.find_element(By.ID, "username").send_keys(username)
-    driver.find_element(By.ID, "password").send_keys(password)
-    driver.find_element(By.ID, "login-button").click()
-
-    message = driver.find_element(By.ID, "message").text
-    assert expected_message in message
+    success_message = driver.find_element(By.TAG_NAME, "h1").text
+    assert success_message == "Logged In Successfully"

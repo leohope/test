@@ -12,9 +12,13 @@ jobs:
         run: pip install poetry
       - name: Install dependencies
         run: poetry install --no-interaction --no-root
-      - name: Install Google Chrome
+      - name: Install ChromeDriver
         run: |
-                chmod +x ./scripts/InstallChrome.sh
-                            ./scripts/InstallChrome.sh
+          CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | sed 's/\.[0-9]*$//')
+          DRIVER_VERSION=$(curl -sSL "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
+          wget "https://chromedriver.storage.googleapis.com/$DRIVER_VERSION/chromedriver_linux64.zip" -O chromedriver.zip
+          unzip chromedriver.zip
+          chmod +x chromedriver
+          mv chromedriver /usr/local/bin/chromedriver
       - name: Run tests
         run: poetry run pytest

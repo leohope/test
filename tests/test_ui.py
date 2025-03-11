@@ -1,3 +1,5 @@
+import shutil
+
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -16,7 +18,7 @@ def driver():
     driver.maximize_window()
     yield driver
     driver.quit()
-
+    shutil.rmtree(user_data_dir)
 
 def test_login(driver):
     driver.find_element(By.ID, "username").send_keys("student")

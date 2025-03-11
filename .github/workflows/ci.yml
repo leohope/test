@@ -14,7 +14,7 @@ jobs:
         run: poetry install --no-interaction --no-root
       - name: Install ChromeDriver
         run: |
-          CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | sed 's/\.[0-9]*$//')
+          CHROME_VERSION=$(google-chrome --version | awk '{print $3}')
           wget "https://storage.googleapis.com/chrome-for-testing-public/$CHROME_VERSION/linux64/chrome-linux64.zip" -O chromedriver.zip
           unzip chromedriver.zip
           chmod +x chromedriver

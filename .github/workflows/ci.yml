@@ -12,6 +12,11 @@ jobs:
         run: pip install poetry
       - name: Install dependencies
         run: poetry install --no-interaction --no-root
+      - name: Install Allure
+        run: |
+          curl -o allure.zip -L https://github.com/allure-framework/allure2/releases/download/2.23.0/allure-2.23.0.zip
+          unzip allure.zip -d $HOME/.allure
+          echo "$HOME/.allure/bin" >> $GITHUB_PATH
       - name: Run tests
         run: poetry run pytest
       - name: Run tests with Allure

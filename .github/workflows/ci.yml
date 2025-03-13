@@ -15,6 +15,9 @@ jobs:
       - name: Install dependencies
         run: poetry install --no-interaction --no-root
 
+      - name: Install Allure CLI on Windows
+        run: choco install allure
+
       - name: Run tests with Allure
         run: poetry run pytest --alluredir=allure-results
 

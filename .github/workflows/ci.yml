@@ -15,11 +15,14 @@ jobs:
       - name: Install dependencies
         run: poetry install --no-interaction --no-root
 
-      - name: Install Choco on Windows
-        run: pip install choco
-
-      - name: Install Allure CLI on Windows
-        run: choco install allure
+      - name: Install Allure CLI
+        run: |
+          $url = "https://github.com/allure-framework/allure2/releases/download/2.18.1/allure-2.18.1.zip"
+          $output = "allure.zip"
+          Invoke-WebRequest -Uri $url -OutFile $output
+          Expand-Archive -Path $output -DestinationPath allure
+          $env:PATH += ";$(pwd)\allure\allure-2.18.1\bin"
+          echo "Allure CLI installed successfully."
 
       - name: Run tests with Allure
         run: poetry run pytest --alluredir=allure-results

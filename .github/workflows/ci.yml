@@ -15,6 +15,9 @@ jobs:
       - name: Install dependencies
         run: poetry install --no-interaction --no-root
 
+      - name: Install Choco on Windows
+        run: pip install choco
+
       - name: Install Allure CLI on Windows
         run: choco install allure
 

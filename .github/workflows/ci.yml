@@ -17,12 +17,11 @@ jobs:
 
       - name: Install Allure CLI
         run: |
-          $url = "https://github.com/allure-framework/allure2/releases/download/2.18.1/allure-2.18.1.zip"
-          $output = "allure.zip"
-          Invoke-WebRequest -Uri $url -OutFile $output
-          Expand-Archive -Path $output -DestinationPath allure
-          $env:PATH += ";$(pwd)\allure\allure-2.18.1\bin"
-          echo "Allure CLI installed successfully."
+          curl -o allure.zip -L https://github.com/allure-framework/allure2/releases/download/2.21.0/allure-2.21.0.zip
+          unzip allure.zip -d allure
+          echo "$(pwd)/allure/allure-2.21.0/bin" >> $GITHUB_PATH
+      - name: Check Allure CLI
+        run: allure --version
 
       - name: Run tests with Allure
         run: poetry run pytest --alluredir=allure-results

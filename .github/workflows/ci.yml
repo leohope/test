@@ -3,7 +3,7 @@ name: API Tests with PyTest
 on: [ push ]
 
 jobs:
-  test:
+  tests:
     runs-on: ubuntu-latest
     services:
       selenium:

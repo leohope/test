@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  selenium-chrome:
+    image: selenium/standalone-chrome:latest
+    container_name: selenium-chrome
+    ports:
+      - "4444:4444"  # WebDriver API
+
+  tests:
+    build: .
+    container_name: ui-api-tests
+    depends_on:
+      - selenium-chrome
+    environment:
+      - SELENIUM_REMOTE_URL=http://selenium-chrome:4444/wd/hub
+    volumes:
+      - ./allure-results:/app/allure-results  # Для отчетов
+    command: [ "pytest", "--browser", "chrome" ]

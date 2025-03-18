@@ -10,11 +10,10 @@ def driver():
     chrome_options.add_argument("--headless=new")
     chrome_options.add_argument("--no-sandbox")
 
-    driver = webdriver.Chrome(options=chrome_options)
+    driver = webdriver.Remote(command_executor="http://selenium-chrome:4444/wd/hub", options=chrome_options)
 
     driver.implicitly_wait(10)
-    yield driver
-    driver.quit()
+    return driver
 
 
 def test_login(driver):
@@ -26,3 +25,4 @@ def test_login(driver):
 
     success_message = driver.find_element(By.TAG_NAME, "h1").text
     assert success_message == "Logged In Successfully"
+    driver.quit()

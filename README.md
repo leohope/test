@@ -1,7 +1,1 @@
-# This my first testing READ.ME for museum's app
-## To do list:
-  1. Mindmapping
-  1. Sketching
-  1. Wireframe
-  1. Design
-  1. Review
+# This project include: 2 simple tests(ui-test with Selenium and Pytest and api-test with Pytest and Request), CI/CD with Docker and generate Allure report. 

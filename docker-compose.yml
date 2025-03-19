@@ -1,19 +1,22 @@
 version: '3.8'
 
 services:
-  selenium-chrome:
-    image: selenium/standalone-chrome:latest
-    container_name: selenium-chrome
+  chrome:
+    image: browserless/chrome:latest
+    container_name: chrome
     ports:
-      - "4444:4444"  # WebDriver API
+      - "3000:3000"
+    networks:
+      - test_network
 
   tests:
-    build: .
-    container_name: ui-api-tests
+    image: tests-image
+    container_name: tests
     depends_on:
-      - selenium-chrome
+      - chrome
     environment:
-      - SELENIUM_REMOTE_URL=http://selenium-chrome:4444/wd/hub
+      - BROWSERLESS_URL=http://chrome:3000
     volumes:
+      - ./tests:/app/tests #Монтируем тесты в контейнер
       - ./allure-results:/app/allure-results  # Для отчетов
-    command: [ "pytest", "--browser", "chrome" ]
+    command: poetry run pytest tests --alluredir=allure-results  # Команда для запуска тестов

@@ -1,42 +1,32 @@
-name: API Tests with PyTest
+name: tests for chrome
 
 on: [ push ]
 
 jobs:
-  tests:
+  test:
     runs-on: ubuntu-latest
+
     services:
-      selenium:
-        image: selenium/standalone-chrome:latest
+      chrome:
+        image: browserless/chrome:latest
         ports:
-          - 4444:4444
+          - 3000:3000
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Docker Compose
+      - name: Set up Docker Compose
         run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose
+          docker-compose -f docker-compose.yml build
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build and run tests
+      - name: Run tests in Docker
         run: |
-          docker-compose up --abort-on-container-exit
-          docker-compose down
-
-      - name: Upload Allure results
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-results
-          path: allure-results
+          docker-compose up --abort-on-container-exit --build
 
       - name: Generate Allure Report
         run: |
-          npm install -g allure-commandline
-          allure generate allure-results -o allure-report --clean
+          docker-compose exec tests poetry run allure generate allure-results --clean -o allure-report
 
       - name: Upload Allure Report as artifact
         uses: actions/upload-artifact@v4
@@ -46,7 +36,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: tests
+    needs: test
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

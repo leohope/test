@@ -1,17 +1,17 @@
-# Используем Python 3.11
+# Базовый образ с Python
 FROM python:3.12
-
-# Указываем рабочую директорию
-WORKDIR /app
-
-# Копируем весь код проекта
-COPY . /app
 
 # Обновляем pip и устанавливаем poetry
 RUN pip install --upgrade pip poetry
 
-# Устанавливаем зависимости
-RUN poetry install --no-root
+# Указываем рабочую директорию
+WORKDIR /app
 
-# Запускаем тесты при старте контейнера
-CMD ["poetry", "--browser=chrome"]
+# Копируем только файлы зависимостей (без тестов!)
+COPY pyproject.toml poetry.lock ./
+
+# Устанавливаем зависимости
+RUN poetry config virtualenvs.create false && install --no-root
+
+# Контейнер в ожидании команд
+CMD ["/bin/bash"]

@@ -11,7 +11,7 @@ WORKDIR /app
 COPY pyproject.toml poetry.lock ./
 
 # Устанавливаем зависимости
-RUN poetry config virtualenvs.create false && install --no-root
+RUN poetry config virtualenvs.create false && poetry install --no-root
 
-# Контейнер в ожидании команд
-CMD ["/bin/bash"]
+# Заупускаем тесты
+CMD ["poetry", "run", "pytest", "--alluredir=allure-results"]

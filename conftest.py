@@ -1,10 +1,10 @@
 import pytest
 from selenium import webdriver
 
-SELENIUM_GRID_URL = "http://selenium-hub:4444/wd/hub"
+SELENIUM_GRID_URL = "http://localhost:4444/wd/hub"
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def browser(request):
     browser_name = request.config.getoption("--browser")
 

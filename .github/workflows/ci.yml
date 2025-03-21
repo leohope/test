@@ -7,51 +7,64 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      chrome:
-        image: browserless/chrome:latest
+      selenium-hub:
+        image: selenium/hub:latest
         ports:
-          - 3000:3000
+          - 4444:4444
+
+      chrome:
+        image: selenium/node-chrome:latest
+        env:
+          SE_EVENT_BUS_HOST: selenium-hub
+          SE_EVENT_BUS_PUBLISH_PORT: 4442
+          SE_EVENT_BUS_SUBSCRIBE_PORT: 4443
+
+      firefox:
+        image: selenium/node-firefox:latest
+        env:
+          SE_EVENT_BUS_HOST: selenium-hub
+          SE_EVENT_BUS_PUBLISH_PORT: 4442
+          SE_EVENT_BUS_SUBSCRIBE_PORT: 4443
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Docker Compose
-        run: sudo apt-get update && sudo apt-get install -y docker-compose
-
-      - name: Set up Docker Compose
+      - name: Install dependencies
         run: |
-          docker-compose -f docker-compose.yml build
+          pip install --upgrade pip poetry
+          poetry install
 
-      - name: Run tests in Docker
+      - name: Run tests with Selenium Grid
         run: |
-          docker-compose up --abort-on-container-exit --build
+          poetry run pytest --browser remote_chrome
+          poetry run pytest --browser remote_firefox    
 
-      - name: Generate Allure Report
-        run: |
-          docker-compose exec tests poetry run allure generate allure-results --clean -o allure-report
+#      - name: Generate Allure Report
+#        run: |
+#          docker-compose exec tests poetry run allure generate allure-results --clean -o allure-report
+#
+#      - name: Upload Allure Report as artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: allure-report
+#          path: allure-report
 
-      - name: Upload Allure Report as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-report
-          path: allure-report
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Download Allure Report
-        uses: actions/download-artifact@v4
-        with:
-          name: allure-report
-          path: allure-report
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: allure-report
+#  deploy:
+#    runs-on: ubuntu-latest
+#    needs: test
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v4
+#
+#      - name: Download Allure Report
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: allure-report
+#          path: allure-report
+#
+#      - name: Deploy to GitHub Pages
+#        uses: peaceiris/actions-gh-pages@v3
+#        with:
+#          github_token: ${{ secrets.GITHUB_TOKEN }}
+#          publish_dir: allure-report

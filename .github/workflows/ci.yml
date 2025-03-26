@@ -1,4 +1,4 @@
-name: tests for chrome
+name: tests for chrome firefox
 
 on: [ push ]
 
@@ -33,7 +33,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip poetry
-          poetry install
+          poetry install --no-root
 
       - name: Run tests with Selenium Grid
         run: |
